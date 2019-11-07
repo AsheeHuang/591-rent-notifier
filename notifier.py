@@ -9,6 +9,13 @@ import json
 from selenium.common import exceptions  
 
 def check_for_new_house(seen) :
+    def get_region_id(url):
+        region_id = ""
+        idx = url.find("region=") + 7
+        while url[idx].isdigit() :
+            region_id += url[idx]
+            idx += 1
+        return region_id
     config = json.load(open("config.json"))
     house_url = config["591_url"]
 
@@ -21,7 +28,8 @@ def check_for_new_house(seen) :
     driver.get(house_url)
     # driver.set_window_size(1920,1080)
 
-    newtaipei = driver.find_element_by_css_selector("dd[data-id='3']") 
+    region_id = get_region_id(house_url)
+    newtaipei = driver.find_element_by_css_selector("dd[data-id='%s']" % region_id) 
     newtaipei.click()
 
     # wait for loading
