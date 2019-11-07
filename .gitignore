@@ -1,0 +1,6 @@
+*.json
+.vscode
+bin
+include
+lib
+.Python
