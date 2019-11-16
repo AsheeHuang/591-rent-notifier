@@ -1,6 +1,19 @@
 #!/bin/bash
 
-read -p "Generate config file? (y/n) : " ans
+while getopts " ":d"" OPTION
+do
+    case ${OPTION} in
+        "d") USE_DOCKER='true' && echo "Use Docker";;
+        ?) usage ;;
+    esac
+done
+
+usage() {
+    echo "Usage: ${0} [-d]" >&2
+    echo '  -d Use docker' >&2 
+}
+
+read -p "Generate config file? (y/n)[N] : " ans
 ans=${ans:n}
 
 if [[ ${ans} == 'y' ]] ; then
@@ -41,4 +54,9 @@ fi
 
 cat ./config.json
 
-docker run -it -w /usr/workspace -v $(pwd):/usr/workspace joyzoursky/python-chromedriver:3.7-selenium python notifier.py
+if [[ ${USE_DOCKER} -eq 'true' ]]
+then
+    docker run -it -w /usr/workspace -v $(pwd):/usr/workspace joyzoursky/python-chromedriver:3.7-selenium python notifier.py
+else
+    python notifier.py
+fi
